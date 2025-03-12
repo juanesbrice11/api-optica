@@ -4,6 +4,7 @@ import { User } from 'src/users/users.entity';
 import { JwtService } from '@nestjs/jwt';
 import { LoginDto, RegisterDto } from './dto/auth.dto';
 import * as bcrypt from 'bcrypt';
+import { log } from 'console';
 
 @Injectable()
 export class AuthService {
@@ -34,7 +35,7 @@ export class AuthService {
 
     async register(registerDto: RegisterDto) {
         const existingUser = await this.usersService.findOne(registerDto.email);
-        console.log(existingUser);
+        
         if (existingUser) {
             throw new ConflictException('Email already exists');
         }
