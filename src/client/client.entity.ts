@@ -1,9 +1,9 @@
 import { Entity, Column, PrimaryColumn} from 'typeorm';
 
-@Entity()
+@Entity('clients')
 export class Client {
     @PrimaryColumn()
-    id: number;
+    id: string;
 
     @Column({ length: 50, nullable: false})
     name: string;
