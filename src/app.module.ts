@@ -7,7 +7,7 @@ import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { GlassesModule } from './glasses/glasses.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Glasses } from './glasses/entities/glasses.entity';
+import { SalesModule } from './sales/sales.module';
 
 @Module({
   imports: [
@@ -23,7 +23,7 @@ import { Glasses } from './glasses/entities/glasses.entity';
         username: configService.get('DB_USERNAME'),
         password: configService.get('DB_PASSWORD'),
         database: configService.get('DB_DATABASE'),
-        entities: [Glasses],
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
         synchronize: configService.get('DB_SYNC') === 'true',
       }),
       inject: [ConfigService],
@@ -31,7 +31,8 @@ import { Glasses } from './glasses/entities/glasses.entity';
     ClientModule,
     AuthModule,
     UsersModule,
-    GlassesModule
+    GlassesModule,
+    SalesModule
   ],
   controllers: [AppController],
   providers: [AppService],
