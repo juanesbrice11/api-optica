@@ -18,4 +18,9 @@ export class AuthController {
     async register(@Body() registerDto: RegisterDto) {
         return this.authService.register(registerDto);
     }
+
+    @Post('validate')
+    async validateToken(@Body('token') token: string) {
+        return this.authService.decodeToken(token);
+    }
 } 

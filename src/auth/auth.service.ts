@@ -13,6 +13,14 @@ export class AuthService {
         private jwtService: JwtService
     ) { }
 
+    async decodeToken(token: string): Promise<any> {
+        try {
+            return this.jwtService.decode(token);
+        } catch (error) {
+            throw new UnauthorizedException('Invalid token');
+        }
+    }
+    
     async validateUser(email: string, password: string): Promise<any> {
         const user = await this.usersService.findOne(email);
         if (user && (await bcrypt.compare(password, user.password))) {
@@ -27,7 +35,7 @@ export class AuthService {
         if (!userFound) {
             throw new UnauthorizedException('Invalid credentials');
         }
-        const payload = { email: userFound.email, sub: userFound.id };
+        const payload = { email: userFound.email, sub: userFound.id, role: userFound.role };
         return {
             access_token: this.jwtService.sign(payload),
         };
