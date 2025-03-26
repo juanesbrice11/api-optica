@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryColumn} from 'typeorm';
+import { Entity, Column, PrimaryColumn, OneToMany } from 'typeorm';
+import { ClinicalHistory } from '../clinical-history/clinical-history.entity';
 
 @Entity('clients')
 export class Client {
@@ -16,4 +17,7 @@ export class Client {
 
     @Column({ length: 15, nullable: false, unique: true})
     phone: string;
+
+    @OneToMany(() => ClinicalHistory, (clinicalHistory) => clinicalHistory.client)
+    clinicalHistories: ClinicalHistory[];
 }
