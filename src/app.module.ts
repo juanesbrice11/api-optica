@@ -8,6 +8,7 @@ import { UsersModule } from './users/users.module';
 import { GlassesModule } from './glasses/glasses.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SalesModule } from './sales/sales.module';
+import { ClinicalHistoryModule } from './clinical-history/clinical-history.module';
 
 @Module({
   imports: [
@@ -31,7 +32,8 @@ import { SalesModule } from './sales/sales.module';
     AuthModule,
     UsersModule,
     GlassesModule,
-    SalesModule
+    SalesModule,
+    ClinicalHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
