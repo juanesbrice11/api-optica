@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { SalesModule } from './sales/sales.module';
 import { ClinicalHistoryModule } from './clinical-history/clinical-history.module';
 import * as crypto from 'crypto';
+
 (global as any).crypto = crypto;
 
 @Module({
@@ -21,14 +22,25 @@ import * as crypto from 'crypto';
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => {
         const databaseUrl = configService.get<string>('DATABASE_URL');
-        if (!databaseUrl) {
-          throw new Error('DATABASE_URL is not defined in environment variables');
+
+        if (databaseUrl) {
+          return {
+            type: 'mysql',
+            url: databaseUrl,
+            autoLoadEntities: true,
+            synchronize: true, // ⚠️ Cambiar a false en producción
+          };
         }
+
         return {
           type: 'mysql',
-          url: databaseUrl,
+          host: configService.get<string>('DB_HOST', 'localhost'),
+          port: parseInt(configService.get<string>('DB_PORT', '3306')),
+          username: configService.get<string>('DB_USERNAME', 'root'),
+          password: configService.get<string>('DB_PASSWORD', ''),
+          database: configService.get<string>('DB_DATABASE', 'test'),
           autoLoadEntities: true,
-          synchronize: true, // Cambiar a false en producción
+          synchronize: true, // ⚠️ Cambiar a false en producción
         };
       },
       inject: [ConfigService],
