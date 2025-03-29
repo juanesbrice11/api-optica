@@ -9,8 +9,6 @@ import { GlassesModule } from './glasses/glasses.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { SalesModule } from './sales/sales.module';
 import { ClinicalHistoryModule } from './clinical-history/clinical-history.module';
-import * as crypto from 'crypto';
-(global as any).crypto = crypto;
 
 @Module({
   imports: [
@@ -19,15 +17,18 @@ import * as crypto from 'crypto';
     }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        type: 'mysql',
-        host: configService.get('DB_HOST'),
-        port: +configService.get('DB_PORT'),
-        username: configService.get('DB_USERNAME'),
-        password: configService.get('DB_PASSWORD'),
-        database: configService.get('DB_DATABASE'),
-        entities: [__dirname + '/**/*.entity{.ts,.js}'],
-      }),
+      useFactory: (configService: ConfigService) => {
+        const databaseUrl = configService.get<string>('DATABASE_URL');
+        if (!databaseUrl) {
+          throw new Error('DATABASE_URL is not defined in environment variables');
+        }
+        return {
+          type: 'mysql',
+          url: databaseUrl,
+          autoLoadEntities: true,
+          synchronize: true, // Cambiar a false en producción
+        };
+      },
       inject: [ConfigService],
     }),
     ClientModule,
