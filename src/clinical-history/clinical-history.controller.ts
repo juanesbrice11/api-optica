@@ -19,6 +19,7 @@ export class ClinicalHistoryController {
 
     @Post()
     create(@Body() historyData: CreateClinicalHistoryDto) {
+        console.log("Datos recibidos en el backend:", historyData);
         return this.clinicalHistoryService.create(historyData);
     }
 
